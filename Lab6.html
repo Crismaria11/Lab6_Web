@@ -12,6 +12,11 @@
     <script type="text/babel">
     
       const Grid = () => {
+        const display = {
+          display: "flex",
+          justifyContent: "center"
+        }
+        
         const styleContainer = {
           display: "grid",
           gridTemplateColumns: "repeat(4, 1fr)",
@@ -24,10 +29,6 @@
           height: "700px"
         }
         
-
-        const Div = ({handleClick}) =>{
-          <div onClick={handleClick} />
-        }
 
         const [contador, setContador] = React.useState(0)
         
@@ -47,7 +48,7 @@
           {id: 13, imagen: "perrito7.jpg", isFlipped: false},
           {id: 14, imagen: "perrito7.jpg", isFlipped: false},
           {id: 15, imagen: "perrito8.jpg", isFlipped: false},
-          {id: 16, imagen: "perrito8.jpg", isFlipped: false},
+          {id: 16, imagen: "perrito8.jpg", isFlipped: false}
         ]
 
         const [perritosCartas, setPerritosCartas] = React.useState(perritosCartasDefault)
@@ -57,17 +58,19 @@
           setPerritosCartas(perritosCartasCopia)
         } 
      
-
+        
         return(
-        <div>
-          <h1>Algo tal vez aparece {contador} </h1>
-            <div style={styleContainer}>
-              {
-                perritosCartas.map((perrito, index) => <Carta key={perrito.id} caraPerrito={perrito.imagen} isFlipped={perrito.isFlipped} handleClick={() => funcionFlippear(index)}/>)
-                
-              }
-            </div>
-        </div>    
+          <div>
+          <h1>La memoria mas bonita del mundo</h1>
+          <h2 align="right">Has realizado {contador} movimientos</h2>
+            <div style={display}>
+              <div style={styleContainer}>
+                {
+                  perritosCartas.map((perrito, index) => <Carta key={perrito.id} caraPerrito={perrito.imagen} isFlipped={perrito.isFlipped} handleClick={() => funcionFlippear(index)}/>)
+                }
+              </div>
+            </div>  
+          </div>    
         )
           
       }
@@ -99,6 +102,8 @@
           width: "100%",
           justifyContent: "center"
         }
+
+      
 
         return (
           <div onClick={handleClick} style={styleItem}>
