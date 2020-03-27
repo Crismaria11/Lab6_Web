@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  </head>  
+  <body>
+    <div id="root"></div>  
+    
+    <script type="text/babel">
+    
+      const Grid = () => {
+        const styleContainer = {
+          display: "grid",
+          gridTemplateColumns: "repeat(4, 1fr)",
+          gridTemplateRows: "repeat(4, 1fr)",
+          gridColumnStart: "1",
+          gridColumnEnd: "5",
+          gridRowStart: "1",
+          gridRowEnd: "5",
+          width: "500px",
+          height: "700px"
+        }
+        
+
+        const Div = ({handleClick}) =>{
+          <div onClick={handleClick} />
+        }
+
+        const [contador, setContador] = React.useState(0)
+        
+        const perritosCartasDefault = [
+          {id: 1, imagen: "perrito1.jpg", isFlipped: false},
+          {id: 2, imagen: "perrito1.jpg", isFlipped: false},
+          {id: 3, imagen: "perrito2.jpg", isFlipped: false},
+          {id: 4, imagen: "perrito2.jpg", isFlipped: false},
+          {id: 5, imagen: "perrito3.jpg", isFlipped: false},
+          {id: 6, imagen: "perrito3.jpg", isFlipped: false},
+          {id: 7, imagen: "perrito4.jpg", isFlipped: false},
+          {id: 8, imagen: "perrito4.jpg", isFlipped: false},
+          {id: 9, imagen: "perrito5.jpg", isFlipped: false},
+          {id: 10, imagen: "perrito5.jpg", isFlipped: false},
+          {id: 11, imagen: "perrito6.jpg", isFlipped: false},
+          {id: 12, imagen: "perrito6.jpg", isFlipped: false},
+          {id: 13, imagen: "perrito7.jpg", isFlipped: false},
+          {id: 14, imagen: "perrito7.jpg", isFlipped: false},
+          {id: 15, imagen: "perrito8.jpg", isFlipped: false},
+          {id: 16, imagen: "perrito8.jpg", isFlipped: false},
+        ]
+
+        const [perritosCartas, setPerritosCartas] = React.useState(perritosCartasDefault)
+        const funcionFlippear = (index) => {
+          const perritosCartasCopia = [...perritosCartas]
+          perritosCartasCopia[index].isFlipped = true
+          setPerritosCartas(perritosCartasCopia)
+        } 
+     
+
+        return(
+        <div>
+          <h1>Algo tal vez aparece {contador} </h1>
+            <div style={styleContainer}>
+              {
+                perritosCartas.map((perrito, index) => <Carta key={perrito.id} caraPerrito={perrito.imagen} isFlipped={perrito.isFlipped} handleClick={() => funcionFlippear(index)}/>)
+                
+              }
+            </div>
+        </div>    
+        )
+          
+      }
+
+
+      const Carta = ({caraPerrito, isFlipped, handleClick}) => {
+        const styleItem = {
+          display: "item",
+          width: "100px",
+          height: "150px",
+          background: "red",
+          justifyContent: "center",
+          border: "10px solid skyblue"
+        }
+        const styleCarta = {
+          height: "100%",
+          width: "100%",
+          background: "white",
+          justifyContent: "center"
+        }
+        
+        const styleImagen = {
+          height: "100%",
+          width: "100%"
+        }
+
+        const styleAtras = {
+          height: "100%",
+          width: "100%",
+          background: "black",
+          justifyContent: "center"
+        }
+
+        return (
+          <div onClick={handleClick} style={styleItem}>
+            <div style={styleCarta}>
+            {
+              isFlipped?
+              <img style={styleImagen} src={caraPerrito}/>:
+              <div style={styleAtras}/>
+            }
+              
+                
+            </div>
+          </div>
+        )
+      } 
+        
+        
+        ReactDOM.render(
+          <Grid />, document.getElementById("root")
+        )
+        
+    
+    </script>
+  </body>
+</html>
