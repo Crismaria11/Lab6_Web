@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="margin: 0; padding: 0">
   <head>
     <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
   </head>  
-  <body>
+  <body style="margin: 0; padding: 0">
     <div id="root"></div>  
     
     <script type="text/babel">
@@ -14,7 +14,7 @@
       const Grid = () => {
         const display = {
           display: "flex",
-          justifyContent: "center"
+          justifyContent: "center",
         }
         
         const styleContainer = {
@@ -25,12 +25,42 @@
           gridColumnEnd: "5",
           gridRowStart: "1",
           gridRowEnd: "5",
-          width: "500px",
-          height: "700px"
+          width: "600px",
+          height: "900px"
         }
-        
+        const styleFondoTotal = {
+          backgroundImage: "url(mesa.jpg)"
+        }
+        const styleH1 = {
+          color: "skyblue",
+          fontFamily: "Comic Sans Ms",
+          align: "center",
+          fontSize: "60px",
+          textAlign: "center",
+          margin: '0'
+        }
 
+        const styleH2 = {
+          color: "skyblue",
+          fontFamily: "Comic Sans Ms",
+          align: "center",
+          fontSize: "40px",
+          textAlign: "right"
+        }
+
+        const shuffleArray = (array) => {
+            for (var i = array.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+            }
+        }
+
+        
         const [contador, setContador] = React.useState(0)
+        const [parejas, setParejas] = React.useState(1)
+        const [ganar, setGanar] = React.useState(false)
         
         const perritosCartasDefault = [
           {id: 1, imagen: "perrito1.jpg", isFlipped: false},
@@ -50,23 +80,88 @@
           {id: 15, imagen: "perrito8.jpg", isFlipped: false},
           {id: 16, imagen: "perrito8.jpg", isFlipped: false}
         ]
-
-        const [perritosCartas, setPerritosCartas] = React.useState(perritosCartasDefault)
+        shuffleArray(perritosCartasDefault)
+        
+        const [primerFlip, setPrimerFlip] = React.useState(null)
+        const [perritosCartas, setPerritosCartas, getPerritosCartas] = React.useState(perritosCartasDefault)
+        
         const funcionFlippear = (index) => {
           const perritosCartasCopia = [...perritosCartas]
-          perritosCartasCopia[index].isFlipped = true
-          setPerritosCartas(perritosCartasCopia)
+          if(perritosCartasCopia[index].isFlipped !== true ){
+            perritosCartasCopia[index].isFlipped = true
+            setPerritosCartas(perritosCartasCopia)
+            if (primerFlip !== null) {
+              if(perritosCartasCopia[primerFlip].imagen == perritosCartasCopia[index].imagen){
+                setPrimerFlip(null)
+                setParejas(parejas + 1)
+                console.log(parejas)
+                if (parejas === 8) {
+                  setTimeout(() => setGanar(true), 500)
+                }
+              } else {
+                console.log("Perdedor :p")
+                setTimeout(() => {
+                  perritosCartasCopia[primerFlip].isFlipped = false
+                  perritosCartasCopia[index].isFlipped = false
+                  setPerritosCartas(perritosCartasCopia)
+                  setPrimerFlip(null)
+                }, 1000)
+                  
+              }
+              
+            } else {
+              setPrimerFlip(index)
+              console.log("Primer perrito")
+            }
+          }       
+          
         } 
-     
+        const winStyle = {
+          width: '100wh',
+          height: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          backgroundImage: 'url("perritos.jpg")',
+          backgroundSize: 'cover',
+          justifyContent: 'flex-start',
+          alignItems: 'center'
+        }
+        const h1WinStyle = {
+          margin: '0',
+          textAlign: 'center',
+          fontFamily: 'Comic Sans Ms',
+          fontSize: '150px',
+          color: 'burlywood'
+        }
+        const h5Style = {
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          fontFamily: 'Comic Sans Ms',
+          fontSize: '20px',
+          flexFlow: 'end',
+          margin: '15px 0',
+          color: 'brown'
+        }
+        
+        
+        if (ganar) {
+          return (
+            <div style={winStyle}>
+              <h1 style={h1WinStyle}>Ganaste!</h1>
+              <h5 style={h5Style}>(Refresca la pagina para jugar de nuevo)</h5>
+            </div>
+          )
+        }
         
         return(
-          <div>
-          <h1>La memoria mas bonita del mundo</h1>
-          <h2 align="right">Has realizado {contador} movimientos</h2>
+          <div style={styleFondoTotal}>
+          <h1 style={styleH1}>La Memoria Mas Bonita Del Mundo</h1>
+          <h2 style={styleH2}>Has realizado {contador} movimientos</h2>
             <div style={display}>
               <div style={styleContainer}>
                 {
-                  perritosCartas.map((perrito, index) => <Carta key={perrito.id} caraPerrito={perrito.imagen} isFlipped={perrito.isFlipped} handleClick={() => funcionFlippear(index)}/>)
+                  perritosCartas.map((perrito, index) => <Carta key={perrito.id} caraPerrito={perrito.imagen} isFlipped={perrito.isFlipped} handleClick={() => {funcionFlippear(index), setContador(contador + 1)}}/>)
                 }
               </div>
             </div>  
@@ -82,37 +177,44 @@
           width: "100px",
           height: "150px",
           background: "red",
-          justifyContent: "center",
-          border: "10px solid skyblue"
+          border: "10px solid skyblue",
+          cursor: "pointer"
         }
         const styleCarta = {
           height: "100%",
           width: "100%",
-          background: "white",
+          backgroundImage: "url(mesa.jpg)",
           justifyContent: "center"
         }
         
         const styleImagen = {
-          height: "100%",
-          width: "100%"
+          height: "150px",
+          width: "100px",
+          top: '-154px',
+          position: 'relative',
+          backfaceVisibility: 'hidden',
+          transform: isFlipped? "rotateY(180deg)" : "rotateY(90deg)",
+          transition: "transform 500ms linear",
+          transitionDelay: isFlipped? '0s' : '500ms'
         }
 
         const styleAtras = {
           height: "100%",
           width: "100%",
-          justifyContent: "center"
-        }
+          justifyContent: "center",
+          backfaceVisibility: 'hidden',
+          transform: isFlipped? "rotateY(90deg)" : "rotateY(180deg)",
+          transition: "transform 500ms linear",
+          transitionDelay: isFlipped? '500ms' : '0s'
+          }
 
-      
+        
 
         return (
           <div onClick={handleClick} style={styleItem}>
             <div style={styleCarta}>
-            {
-              isFlipped?
-              <img style={styleImagen} src={caraPerrito}/>:
               <img style={styleAtras} src="back.jpg"/>
-            }
+              <img style={styleImagen} src={caraPerrito}/>
               
                 
             </div>
